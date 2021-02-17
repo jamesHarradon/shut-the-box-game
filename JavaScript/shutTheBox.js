@@ -30,18 +30,24 @@ document.addEventListener("click", function numSelect(e) {
         return;
     }
 
+    // do i need to parse these??
     let diceOne = parseInt(diceNum1.innerHTML);
     let diceTwo = parseInt(diceNum2.innerHTML);
 
     let total = diceOne + diceTwo;
 
+
+    // the code below minuses the number selected from the total, ensuring 
+    // players do not pick invalid numbers.
     while(total > -1) {
         total -= parseInt(numPicked.innerHTML);
     }
     
-    if (total )
+    // I need to write code that would work out which numbers can be selected depending on which total is rolled. Doesnt have to be highlighted on screen just so that the game knows which numbers the player can select as they roll the dice. 
 
-)};
+    // each number can be assigned an 'available' class. This can then be removed when necessary.
+
+});
 
 
 

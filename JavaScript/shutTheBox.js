@@ -2,9 +2,11 @@ let numBoard = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 let rolledDice = false;
 let rollCount = 0;
-
+let selectionCount = 0;
+let total = 0;
 let rollButton = document.getElementById("rollDice");
 
+// dice roll
 rollButton.addEventListener("click", function rollDice(e) {
     e.preventDefault;
     if (rollCount > 0) {
@@ -18,69 +20,56 @@ rollButton.addEventListener("click", function rollDice(e) {
     diceNum2.innerHTML = Math.ceil(Math.random()*6);
     rolledDice = true;
     rollCount++;
-
+    // do i need to parse these?
+    let diceOne = parseInt(diceNum1.innerHTML);
+    let diceTwo = parseInt(diceNum2.innerHTML);
+    total = diceOne + diceTwo
+    prompt("Please make your selection to continue.")
 })
 
 
 
-
+//!! WILL THE PLAYER BE ABLE TO SELECT AN INVALID NUMBER??
 
 document.addEventListener("click", function numSelect(e) {
-    let numPicked = e.target;
-    let count = 0;
-    if(numPicked.nodeName !== "P" || rolledDice === false || total < 0) {
+    let selection = e.target;
+    let numPicked = parseInt(selection.innerHTML);
+
+    if (total === 0) {
+        rolledDice = false;
+        rollCount = 0;
+        selectionCount = 0;
+    }
+    
+    if(selection.nodeName !== "P" || rolledDice === false || total < 1 || numPicked > total || !numIsAvailable(total, numPicked)) {
         return;
     }
 
-    // do i need to parse these??
-    let diceOne = parseInt(diceNum1.innerHTML);
-    let diceTwo = parseInt(diceNum2.innerHTML);
-
-    let total = diceOne + diceTwo;
-
-
-    // the code below minuses the number selected from the total, ensuring players do not pick invalid numbers.
-    while(total > -1) {
-        total -= parseInt(numPicked.innerHTML);
-    }
+    selection.setAttribute("class", "selected");
     
-    // I need to write code that would work out which numbers can be selected depending on which total is rolled. Doesnt have to be highlighted on screen just so that the game knows which numbers the player can select as they roll the dice. 
+    
+    // the code below minuses the number selected from the total, ensuring players do not pick invalid numbers.
+    while(total > 0) {
+        total -= numPicked;
+    }
 
-    // each number can be assigned an 'available' class. This can then be removed when necessary.
+    
+    selectionCount++;
+
+    
 
 });
 
-
-// need to write a function that calculates the numbers available for selection from the dice rolled and all possible combinations.
-
-
-
-function numsToSelect(total, firstPick) {
+    // below function determines whether number can be selected and provides a boolean value for the selection event listener as a condition.
+function numIsAvailable(total, pick) {
     
-    let boardSlice = [];
-    //creates array with all no.s upto and including total but not including the first pick eg a total roll of 9 and a first selection out of two of 3 would produce the array 
-    // [1, 2, 4, 5, 6, 7, 8, 9]
-    let firstPickNum = firstPick.innerHTML;
-    
-    for (let i = 0; i < 12; i++) {
-        if(total === numBoard[i]) {
-            boardSlice = numBoard.slice(0, i+1);
-        };
-        if(firstPickNum === numBoard[i]) {
-            boardSlice.splice(i, 1);
-        }
-    };
+    let playerSelection = parseInt(pick.innerHTML);
 
-   // once first pick is made, other numbers can then be eliminated from the selection, eg in the above case with 3 as the first pick, the array can be altered to look like [1, 2, 4, 5, 6];
-
-    
-
-    
-
-
-
-
-
+    if ((total - playerSelection) >= 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
